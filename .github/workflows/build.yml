@@ -200,7 +200,9 @@ jobs:
           CLANG_TRIPLE=aarch64-linux-gnu- \
           CROSS_COMPILE=aarch64-linux-gnu- \
           CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
-          O=out
+          O=out \
+          KCFLAGS="-Wno-strict-prototypes" \
+          CONFIG_BUILD_ARM64_DT_OVERLAY=n
 
     - name: Package with AnyKernel3
       run: |
