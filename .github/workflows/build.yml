@@ -48,11 +48,18 @@ jobs:
 
     - name: Resolve symlinks
       run: |
-        # 把 modules 仓库的 vendor 目录放到内核能找到的位置
         ln -sf $GITHUB_WORKSPACE/kernel_modules/vendor \
           $GITHUB_WORKSPACE/vendor
-
-        ls $GITHUB_WORKSPACE/kernel/kernel/sched_assist/
+        
+        # 调试输出
+        echo "=== kernel/kernel/ 目录内容 ==="
+        ls $GITHUB_WORKSPACE/kernel/kernel/
+        
+        echo "=== sched_assist 符号链接指向 ==="
+        readlink -f $GITHUB_WORKSPACE/kernel/kernel/sched_assist
+        
+        echo "=== vendor 目录结构 ==="
+        find $GITHUB_WORKSPACE/vendor -name "sched_assist" -type d
 
     - name: Integrate KernelSU
       run: |
