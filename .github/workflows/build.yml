@@ -52,6 +52,8 @@ jobs:
         ln -sf $GITHUB_WORKSPACE/kernel_modules/vendor \
           $GITHUB_WORKSPACE/vendor
 
+        ls $GITHUB_WORKSPACE/kernel/kernel/sched_assist/
+
     - name: Integrate KernelSU
       run: |
         cd $GITHUB_WORKSPACE/kernel
