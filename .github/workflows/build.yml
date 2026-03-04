@@ -193,6 +193,15 @@ jobs:
           O=out \
           vendor/kona-perf_defconfig
 
+        make -j$(nproc) \
+          ARCH=arm64 \
+          SUBARCH=arm64 \
+          CC=clang \
+          CLANG_TRIPLE=aarch64-linux-gnu- \
+          CROSS_COMPILE=aarch64-linux-gnu- \
+          CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
+          O=out
+
     - name: Package with AnyKernel3
       run: |
         git clone --depth=1 \
