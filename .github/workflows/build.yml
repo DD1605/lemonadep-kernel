@@ -50,20 +50,23 @@ jobs:
       run: |
         ln -sf $GITHUB_WORKSPACE/kernel_modules/vendor \
           $GITHUB_WORKSPACE/vendor
-        
-        # 找到断掉的符号链接，用真实目录替换
-        SCHED_ASSIST_SRC=$GITHUB_WORKSPACE/kernel_modules/vendor/oplus/kernel/oplus_performance/sched_assist
-        SCHED_ASSIST_DST=$GITHUB_WORKSPACE/kernel/kernel/sched_assist
-        
-        echo "=== 源目录是否存在 ==="
-        ls $SCHED_ASSIST_SRC
-        
-        # 删掉断链，换成真实目录的软链接
-        rm -rf $SCHED_ASSIST_DST
-        ln -sf $SCHED_ASSIST_SRC $SCHED_ASSIST_DST
-        
-        echo "=== 验证 ==="
-        ls $SCHED_ASSIST_DST
+
+        # 修复 kernel/kernel/ 下所有断掉的符号链接
+        find $GITHUB_WORKSPACE/kernel/kernel -maxdepth 1 -type l | while read link; do
+          target=$(readlink "$link")
+          # 将相对路径转换为绝对路径
+          abs_target=$GITHUB_WORKSPACE/kernel_modules/vendor/oplus/kernel/oplus_performance/$(basename "$link")
+          if [ ! -e "$link" ] && [ -d "$abs_target" ]; then
+            echo "Fixing: $link -> $abs_target"
+            rm -rf "$link"
+            ln -sf "$abs_target" "$link"
+          fi
+        done
+
+        echo "=== 验证 sched_assist ==="
+        ls $GITHUB_WORKSPACE/kernel/kernel/sched_assist/Kconfig
+        echo "=== 验证 tuning ==="
+        ls $GITHUB_WORKSPACE/kernel/kernel/tuning/
 
     - name: Integrate KernelSU
       run: |
