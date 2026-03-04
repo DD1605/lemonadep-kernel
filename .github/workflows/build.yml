@@ -202,7 +202,8 @@ jobs:
           CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
           O=out \
           KCFLAGS="-Wno-strict-prototypes" \
-          CONFIG_BUILD_ARM64_DT_OVERLAY=y
+          CONFIG_BUILD_ARM64_DT_OVERLAY=y \
+          DTC_FLAGS="-f"
 
     - name: Package with AnyKernel3
       run: |
