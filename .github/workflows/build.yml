@@ -48,43 +48,129 @@ jobs:
 
     - name: Resolve symlinks
       run: |
-        MODULES=$GITHUB_WORKSPACE/kernel_modules/vendor/oplus/kernel
-        KERNEL=$GITHUB_WORKSPACE/kernel/kernel
-        BLOCK=$GITHUB_WORKSPACE/kernel/block
+        M=$GITHUB_WORKSPACE/kernel_modules/vendor/oplus
+        K=$GITHUB_WORKSPACE/kernel
 
-        # kernel/ 下的符号链接
-        rm -rf $KERNEL/tuning
-        ln -sf $MODULES/oplus_performance/frame_boost $KERNEL/tuning
+        # kernel/
+        rm -rf $K/kernel/tuning && ln -sf $M/kernel/oplus_performance/frame_boost $K/kernel/tuning
+        rm -rf $K/kernel/keventupload && ln -sf $M/kernel/secureguard/keventupload $K/kernel/keventupload
+        rm -rf $K/kernel/sched_assist && ln -sf $M/kernel/oplus_performance/sched_assist $K/kernel/sched_assist
+        rm -rf $K/kernel/sigkill_diagnosis && ln -sf $M/kernel/oplus_performance/sigkill_diagnosis $K/kernel/sigkill_diagnosis
+        rm -rf $K/kernel/special_opt && ln -sf $M/kernel/oplus_performance/special_opt $K/kernel/special_opt
+        rm -rf $K/kernel/uad && ln -sf $M/kernel/oplus_performance/uad $K/kernel/uad
 
-        rm -rf $KERNEL/keventupload
-        ln -sf $MODULES/secureguard/keventupload $KERNEL/keventupload
+        # mm/
+        rm -rf $K/mm/multi_kswapd && ln -sf $M/kernel/oplus_performance/multi_kswapd $K/mm/multi_kswapd
+        rm -rf $K/mm/vm_anti_fragment.c && ln -sf $M/kernel/oplus_performance/vm_anti_fragment/vm_anti_fragment.c $K/mm/vm_anti_fragment.c
+        rm -rf $K/mm/reserve_area.c && ln -sf $M/kernel/oplus_performance/gloom_new/reserve_area.c $K/mm/reserve_area.c
+        rm -rf $K/mm/memory_isolate && ln -sf $M/kernel/oplus_performance/memory_isolate $K/mm/memory_isolate
+        rm -rf $K/mm/process_mm_reclaim_weak.c && ln -sf $M/kernel/oplus_performance/process_reclaim/process_mm_reclaim_weak.c $K/mm/process_mm_reclaim_weak.c
+        rm -rf $K/mm/task_mem && ln -sf $M/kernel/oplus_performance/memleak_detect/task_mem $K/mm/task_mem
+        rm -rf $K/mm/malloc_track && ln -sf $M/kernel/oplus_performance/memleak_detect/malloc_track $K/mm/malloc_track
+        rm -rf $K/mm/multi_freearea.h && ln -sf $M/kernel/oplus_performance/multi_freearea/multi_freearea.h $K/mm/multi_freearea.h
+        rm -rf $K/mm/process_mm_reclaim.c && ln -sf $M/kernel/oplus_performance/process_reclaim/process_mm_reclaim.c $K/mm/process_mm_reclaim.c
+        rm -rf $K/mm/multi_freearea.c && ln -sf $M/kernel/oplus_performance/multi_freearea/multi_freearea.c $K/mm/multi_freearea.c
+        rm -rf $K/mm/proactive_compact && ln -sf $M/kernel/oplus_performance/oplus_mm/proactive_compact $K/mm/proactive_compact
+        rm -rf $K/mm/healthinfo && ln -sf $M/kernel/oplus_performance/healthinfo/mm $K/mm/healthinfo
 
-        rm -rf $KERNEL/sched_assist
-        ln -sf $MODULES/oplus_performance/sched_assist $KERNEL/sched_assist
+        # block/
+        rm -rf $K/block/uxio_first && ln -sf $M/kernel/oplus_performance/uxio_first $K/block/uxio_first
+        rm -rf $K/block/blk && ln -sf $M/kernel/oplus_performance/healthinfo/blk $K/block/blk
 
-        rm -rf $KERNEL/sigkill_diagnosis
-        ln -sf $MODULES/oplus_performance/sigkill_diagnosis $KERNEL/sigkill_diagnosis
+        # fs/
+        rm -rf $K/fs/osdcardfs && ln -sf $M/kernel_4.19/sdcardfs $K/fs/osdcardfs
+        rm -rf $K/fs/erofs && ln -sf $M/kernel_4.19/erofs $K/fs/erofs
+        rm -rf $K/fs/of2fs && ln -sf $M/kernel/of2fs $K/fs/of2fs
+        rm -rf $K/fs/oext4 && ln -sf $M/kernel_4.19/ext4 $K/fs/oext4
+        rm -rf $K/fs/exfat && ln -sf $M/kernel_4.19/exfat $K/fs/exfat
+        rm -rf $K/fs/proc/task_cpustats && ln -sf $M/kernel/oplus_performance/task_cpustats $K/fs/proc/task_cpustats
+        rm -rf $K/fs/proc/sched_info && ln -sf $M/kernel/oplus_performance/sched_info $K/fs/proc/sched_info
+        rm -rf $K/fs/proc/va_feature_node.h && ln -sf $M/kernel/oplus_performance/gloom_new/va_feature_node.h $K/fs/proc/va_feature_node.h
+        rm -rf $K/fs/proc/healthinfo && ln -sf $M/kernel/oplus_performance/healthinfo/fs $K/fs/proc/healthinfo
 
-        rm -rf $KERNEL/special_opt
-        ln -sf $MODULES/oplus_performance/special_opt $KERNEL/special_opt
+        # drivers/
+        rm -rf $K/drivers/ommc && ln -sf $M/kernel_4.19/mmc $K/drivers/ommc
+        rm -rf $K/drivers/soc/oplus/iomonitor && ln -sf $M/kernel/oplus_performance/iomonitor $K/drivers/soc/oplus/iomonitor
+        rm -rf $K/drivers/soc/oplus/owakelock && ln -sf $M/kernel/wakelock_profiler $K/drivers/soc/oplus/owakelock
+        rm -rf $K/drivers/soc/oplus/oplus_nandswap && ln -sf $M/kernel/oplus_performance/oplus_nandswap $K/drivers/soc/oplus/oplus_nandswap
+        rm -rf $K/drivers/soc/oplus/storage && ln -sf $M/kernel/storage $K/drivers/soc/oplus/storage
+        rm -rf $K/drivers/soc/oplus/lowmem_dbg && ln -sf $M/kernel/oplus_performance/lowmem_dbg $K/drivers/soc/oplus/lowmem_dbg
+        rm -rf $K/drivers/soc/oplus/thermal && ln -sf $M/kernel/thermal $K/drivers/soc/oplus/thermal
+        rm -rf $K/drivers/soc/oplus/device_info && ln -sf $M/kernel/device_info/device_info $K/drivers/soc/oplus/device_info
+        rm -rf $K/drivers/soc/oplus/im && ln -sf $M/kernel/oplus_performance/im $K/drivers/soc/oplus/im
+        rm -rf $K/drivers/soc/oplus/svelte && ln -sf $M/kernel/oplus_performance/memleak_detect/svelte $K/drivers/soc/oplus/svelte
+        rm -rf $K/drivers/soc/oplus/midas && ln -sf $M/kernel/power/midas $K/drivers/soc/oplus/midas
+        rm -rf $K/drivers/soc/oplus/tpp && ln -sf $M/kernel/oplus_performance/tpp $K/drivers/soc/oplus/tpp
+        rm -rf $K/drivers/soc/oplus/tpd && ln -sf $M/kernel/oplus_performance/tpd $K/drivers/soc/oplus/tpd
+        rm -rf $K/drivers/soc/oplus/misc && ln -sf $M/kernel/misc $K/drivers/soc/oplus/misc
+        rm -rf $K/drivers/soc/oplus/system && ln -sf $M/kernel/system $K/drivers/soc/oplus/system
+        rm -rf $K/drivers/soc/oplus/sensor && ln -sf $M/sensor/kernel/qcom/sensor $K/drivers/soc/oplus/sensor
+        rm -rf $K/drivers/soc/oplus/healthinfo && ln -sf $M/kernel/oplus_performance/healthinfo/main $K/drivers/soc/oplus/healthinfo
+        rm -rf $K/drivers/block/zram/zwb_handle && ln -sf $M/kernel/oplus_performance/zwb_handle $K/drivers/block/zram/zwb_handle
+        rm -rf $K/drivers/input/oplus_fp_drivers && ln -sf $M/secure/biometrics/fingerprints/bsp/drivers $K/drivers/input/oplus_fp_drivers
+        rm -rf $K/drivers/input/oplus_secure_drivers && ln -sf $M/secure/common/bsp/drivers $K/drivers/input/oplus_secure_drivers
+        rm -rf $K/drivers/input/touchscreen/oplus_touchscreen && ln -sf $M/kernel/touchpanel/oplus_touchscreen $K/drivers/input/touchscreen/oplus_touchscreen
+        rm -rf $K/drivers/power/oplus && ln -sf $M/kernel/charger $K/drivers/power/oplus
+        rm -rf $K/drivers/base/kernelFwUpdate && ln -sf $M/kernel/touchpanel/kernelFwUpdate $K/drivers/base/kernelFwUpdate
+        rm -rf $K/drivers/misc/colorctrl_v2 && ln -sf $M/kernel/colorctrl/colorctrl_v2 $K/drivers/misc/colorctrl_v2
+        rm -rf $K/drivers/misc/oem_qmi_client.c && ln -sf $M/kernel/misc/oem_qmi_client.c $K/drivers/misc/oem_qmi_client.c
+        rm -rf $K/drivers/misc/sim_detect.c && ln -sf $M/kernel/misc/sim_detect.c $K/drivers/misc/sim_detect.c
+        rm -rf $K/drivers/misc/oplus_rf_cable_monitor.c && ln -sf $M/kernel/misc/oplus_rf_cable_monitor.c $K/drivers/misc/oplus_rf_cable_monitor.c
+        rm -rf $K/drivers/misc/colorctrl && ln -sf $M/kernel/colorctrl/colorctrl $K/drivers/misc/colorctrl
+        rm -rf $K/drivers/misc/aw8697_haptic && ln -sf $M/kernel/vibrator/aw8697_haptic $K/drivers/misc/aw8697_haptic
+        rm -rf $K/drivers/staging/android/ion/oplus_ion_boost_pool.c && ln -sf $M/kernel/oplus_performance/ion_boost_pool/oplus_ion_boost_pool_qcom_4.19.c $K/drivers/staging/android/ion/oplus_ion_boost_pool.c
+        rm -rf $K/drivers/staging/android/ion/ion && ln -sf $M/kernel/oplus_performance/healthinfo/ion $K/drivers/staging/android/ion/ion
+        rm -rf $K/drivers/staging/android/ion/ion_track && ln -sf $M/kernel/oplus_performance/memleak_detect/ion_track $K/drivers/staging/android/ion/ion_track
+        rm -rf $K/drivers/staging/android/ion/oplus_ion_boost_pool.h && ln -sf $M/kernel/oplus_performance/ion_boost_pool/oplus_ion_boost_pool_qcom_4.19.h $K/drivers/staging/android/ion/oplus_ion_boost_pool.h
+        rm -rf $K/drivers/gpu/msm/kgsl_reserve.h && ln -sf $M/kernel/oplus_performance/gloom_new/kgsl_reserve.h $K/drivers/gpu/msm/kgsl_reserve.h
+        rm -rf $K/drivers/scsi/oufs && ln -sf $M/kernel_4.19/ufs $K/drivers/scsi/oufs
 
-        rm -rf $KERNEL/uad
-        ln -sf $MODULES/oplus_performance/uad $KERNEL/uad
+        # net/
+        rm -rf $K/net/oplus_modules && ln -sf $M/kernel/network $K/net/oplus_modules
 
-        # block/ 下的符号链接
-        rm -rf $BLOCK/blk
-        ln -sf $MODULES/oplus_performance/healthinfo/blk $BLOCK/blk
+        # lib/
+        rm -rf $K/lib/memleak_debug_stackdepot.c && ln -sf $M/kernel/oplus_performance/memleak_detect/stack_depot/memleak_debug_stackdepot.c $K/lib/memleak_debug_stackdepot.c
 
-        rm -rf $BLOCK/uxio_first
-        ln -sf $MODULES/oplus_performance/uxio_first $BLOCK/uxio_first
+        # arch/
+        rm -rf $K/arch/arm64/kernel/rootguard && ln -sf $M/kernel/secureguard/rootguard $K/arch/arm64/kernel/rootguard
+        rm -rf $K/arch/arm64/mm/arch_mmap.h && ln -sf $M/kernel/oplus_performance/gloom_new/arch_mmap.h $K/arch/arm64/mm/arch_mmap.h
 
-        echo "=== 验证所有符号链接 ==="
-        for dir in tuning keventupload sched_assist sigkill_diagnosis special_opt uad; do
-          ls $KERNEL/$dir/Kconfig && echo "$dir OK" || echo "$dir FAILED"
-        done
-        for dir in blk uxio_first; do
-          ls $BLOCK/$dir/Kconfig && echo "$dir OK" || echo "$dir FAILED"
-        done
+        # include/
+        rm -rf $K/include/soc/oplus/healthinfo.h && ln -sf $M/kernel/oplus_performance/healthinfo/main/healthinfo.h $K/include/soc/oplus/healthinfo.h
+        rm -rf $K/include/soc/oplus/oplus_wakelock_profiler.h && ln -sf $M/kernel/wakelock_profiler/oplus_wakelock_profiler.h $K/include/soc/oplus/oplus_wakelock_profiler.h
+        rm -rf $K/include/soc/oplus/lowmem_dbg.h && ln -sf $M/kernel/oplus_performance/lowmem_dbg/lowmem_dbg.h $K/include/soc/oplus/lowmem_dbg.h
+        rm -rf $K/include/soc/oplus/device_info.h && ln -sf $M/kernel/device_info/device_info/device_info.h $K/include/soc/oplus/device_info.h
+        rm -rf $K/include/soc/oplus/system && ln -sf $M/kernel/system/include $K/include/soc/oplus/system
+        rm -rf $K/include/linux/memleak_stackdepot.h && ln -sf $M/kernel/oplus_performance/memleak_detect/stack_depot/memleak_stackdepot.h $K/include/linux/memleak_stackdepot.h
+        rm -rf $K/include/linux/iomonitor && ln -sf $M/kernel/oplus_performance/iomonitor/include $K/include/linux/iomonitor
+        rm -rf $K/include/linux/tuning && ln -sf $M/kernel/oplus_performance/frame_boost $K/include/linux/tuning
+        rm -rf $K/include/linux/special_opt && ln -sf $M/kernel/oplus_performance/special_opt $K/include/linux/special_opt
+        rm -rf $K/include/linux/task_sched_info.h && ln -sf $M/kernel/oplus_performance/task_cpustats/task_sched_info.h $K/include/linux/task_sched_info.h
+        rm -rf $K/include/linux/sched_assist && ln -sf $M/kernel/oplus_performance/sched_assist $K/include/linux/sched_assist
+        rm -rf $K/include/linux/reserve_area.h && ln -sf $M/kernel/oplus_performance/gloom_new/reserve_area.h $K/include/linux/reserve_area.h
+        rm -rf $K/include/linux/process_mm_reclaim.h && ln -sf $M/kernel/oplus_performance/process_reclaim/process_mm_reclaim.h $K/include/linux/process_mm_reclaim.h
+        rm -rf $K/include/linux/im && ln -sf $M/kernel/oplus_performance/im $K/include/linux/im
+        rm -rf $K/include/linux/sigkill_diagnosis && ln -sf $M/kernel/oplus_performance/sigkill_diagnosis $K/include/linux/sigkill_diagnosis
+        rm -rf $K/include/linux/task_cpustats.h && ln -sf $M/kernel/oplus_performance/task_cpustats/task_cpustats.h $K/include/linux/task_cpustats.h
+        rm -rf $K/include/linux/tpp && ln -sf $M/kernel/oplus_performance/tpp $K/include/linux/tpp
+        rm -rf $K/include/linux/tpd && ln -sf $M/kernel/oplus_performance/tpd $K/include/linux/tpd
+        rm -rf $K/include/linux/sched_info && ln -sf $M/kernel/oplus_performance/sched_info $K/include/linux/sched_info
+        rm -rf $K/include/linux/resmap_account.h && ln -sf $M/kernel/oplus_performance/gloom/resmap_account.h $K/include/linux/resmap_account.h
+        rm -rf $K/include/linux/vm_anti_fragment.h && ln -sf $M/kernel/oplus_performance/vm_anti_fragment/vm_anti_fragment.h $K/include/linux/vm_anti_fragment.h
+        rm -rf $K/include/linux/healthinfo && ln -sf $M/kernel/oplus_performance/healthinfo/include $K/include/linux/healthinfo
+
+        # arch/arm64/boot/dts/vendor
+        rm -rf $K/arch/arm64/boot/dts/vendor
+        ln -sf $GITHUB_WORKSPACE/kernel_modules/vendor/qcom/proprietary/devicetree-4.19 $K/arch/arm64/boot/dts/vendor
+
+        # Documentation
+        rm -rf $K/Documentation/devicetree/bindings
+        ln -sf $K/arch/arm64/boot/dts/vendor/bindings $K/Documentation/devicetree/bindings
+
+        echo "=== 验证关键链接 ==="
+        ls $K/kernel/sched_assist/Kconfig && echo "sched_assist OK"
+        ls $K/drivers/input/touchscreen/oplus_touchscreen && echo "touchscreen OK"
+        ls $K/drivers/power/oplus && echo "charger OK"
 
     - name: Integrate KernelSU
       run: |
