@@ -50,8 +50,9 @@ jobs:
       run: |
         MODULES=$GITHUB_WORKSPACE/kernel_modules/vendor/oplus/kernel
         KERNEL=$GITHUB_WORKSPACE/kernel/kernel
+        BLOCK=$GITHUB_WORKSPACE/kernel/block
 
-        # 修复所有已知断链
+        # kernel/ 下的符号链接
         rm -rf $KERNEL/tuning
         ln -sf $MODULES/oplus_performance/frame_boost $KERNEL/tuning
 
@@ -70,9 +71,19 @@ jobs:
         rm -rf $KERNEL/uad
         ln -sf $MODULES/oplus_performance/uad $KERNEL/uad
 
+        # block/ 下的符号链接
+        rm -rf $BLOCK/blk
+        ln -sf $MODULES/oplus_performance/healthinfo/blk $BLOCK/blk
+
+        rm -rf $BLOCK/uxio_first
+        ln -sf $MODULES/oplus_performance/uxio_first $BLOCK/uxio_first
+
         echo "=== 验证所有符号链接 ==="
         for dir in tuning keventupload sched_assist sigkill_diagnosis special_opt uad; do
           ls $KERNEL/$dir/Kconfig && echo "$dir OK" || echo "$dir FAILED"
+        done
+        for dir in blk uxio_first; do
+          ls $BLOCK/$dir/Kconfig && echo "$dir OK" || echo "$dir FAILED"
         done
 
     - name: Integrate KernelSU
