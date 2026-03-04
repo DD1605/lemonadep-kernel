@@ -48,25 +48,32 @@ jobs:
 
     - name: Resolve symlinks
       run: |
-        ln -sf $GITHUB_WORKSPACE/kernel_modules/vendor \
-          $GITHUB_WORKSPACE/vendor
+        MODULES=$GITHUB_WORKSPACE/kernel_modules/vendor/oplus/kernel
+        KERNEL=$GITHUB_WORKSPACE/kernel/kernel
 
-        # 修复 kernel/kernel/ 下所有断掉的符号链接
-        find $GITHUB_WORKSPACE/kernel/kernel -maxdepth 1 -type l | while read link; do
-          target=$(readlink "$link")
-          # 将相对路径转换为绝对路径
-          abs_target=$GITHUB_WORKSPACE/kernel_modules/vendor/oplus/kernel/oplus_performance/$(basename "$link")
-          if [ ! -e "$link" ] && [ -d "$abs_target" ]; then
-            echo "Fixing: $link -> $abs_target"
-            rm -rf "$link"
-            ln -sf "$abs_target" "$link"
-          fi
+        # 修复所有已知断链
+        rm -rf $KERNEL/tuning
+        ln -sf $MODULES/oplus_performance/frame_boost $KERNEL/tuning
+
+        rm -rf $KERNEL/keventupload
+        ln -sf $MODULES/secureguard/keventupload $KERNEL/keventupload
+
+        rm -rf $KERNEL/sched_assist
+        ln -sf $MODULES/oplus_performance/sched_assist $KERNEL/sched_assist
+
+        rm -rf $KERNEL/sigkill_diagnosis
+        ln -sf $MODULES/oplus_performance/sigkill_diagnosis $KERNEL/sigkill_diagnosis
+
+        rm -rf $KERNEL/special_opt
+        ln -sf $MODULES/oplus_performance/special_opt $KERNEL/special_opt
+
+        rm -rf $KERNEL/uad
+        ln -sf $MODULES/oplus_performance/uad $KERNEL/uad
+
+        echo "=== 验证所有符号链接 ==="
+        for dir in tuning keventupload sched_assist sigkill_diagnosis special_opt uad; do
+          ls $KERNEL/$dir/Kconfig && echo "$dir OK" || echo "$dir FAILED"
         done
-
-        echo "=== 验证 sched_assist ==="
-        ls $GITHUB_WORKSPACE/kernel/kernel/sched_assist/Kconfig
-        echo "=== 验证 tuning ==="
-        ls $GITHUB_WORKSPACE/kernel/kernel/tuning/
 
     - name: Integrate KernelSU
       run: |
