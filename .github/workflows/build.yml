@@ -51,15 +51,19 @@ jobs:
         ln -sf $GITHUB_WORKSPACE/kernel_modules/vendor \
           $GITHUB_WORKSPACE/vendor
         
-        # 调试输出
-        echo "=== kernel/kernel/ 目录内容 ==="
-        ls $GITHUB_WORKSPACE/kernel/kernel/
+        # 找到断掉的符号链接，用真实目录替换
+        SCHED_ASSIST_SRC=$GITHUB_WORKSPACE/kernel_modules/vendor/oplus/kernel/oplus_performance/sched_assist
+        SCHED_ASSIST_DST=$GITHUB_WORKSPACE/kernel/kernel/sched_assist
         
-        echo "=== sched_assist 符号链接指向 ==="
-        readlink -f $GITHUB_WORKSPACE/kernel/kernel/sched_assist
+        echo "=== 源目录是否存在 ==="
+        ls $SCHED_ASSIST_SRC
         
-        echo "=== vendor 目录结构 ==="
-        find $GITHUB_WORKSPACE/vendor -name "sched_assist" -type d
+        # 删掉断链，换成真实目录的软链接
+        rm -rf $SCHED_ASSIST_DST
+        ln -sf $SCHED_ASSIST_SRC $SCHED_ASSIST_DST
+        
+        echo "=== 验证 ==="
+        ls $SCHED_ASSIST_DST
 
     - name: Integrate KernelSU
       run: |
