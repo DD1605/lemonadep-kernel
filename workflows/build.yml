@@ -1,0 +1,78 @@
+name: Build Kernel with KernelSU
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    
+    steps:
+    - name: Set swap space
+      uses: pierotofy/set-swap-space@master
+      with:
+        swap-size-gb: 12
+
+    - name: Install dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y git make bc bison flex \
+          libssl-dev libelf-dev python3 zip unzip \
+          libncurses-dev libncurses5 ccache
+
+    - name: Clone toolchain
+      run: |
+        git clone --depth=1 \
+          https://github.com/kdrag0n/proton-clang \
+          $GITHUB_WORKSPACE/toolchain
+
+    - name: Clone kernel source
+      run: |
+        git clone --depth=1 \
+          https://github.com/OnePlusOSS/android_kernel_oneplus_sm8250 \
+          -b oneplus/sm8250_u_14.0.0_op9r \
+          $GITHUB_WORKSPACE/kernel
+
+    - name: Integrate KernelSU
+      run: |
+        cd $GITHUB_WORKSPACE/kernel
+        curl -LSs \
+          "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" \
+          | bash -
+
+    - name: Build kernel
+      run: |
+        cd $GITHUB_WORKSPACE/kernel
+        export PATH=$GITHUB_WORKSPACE/toolchain/bin:$PATH
+        make -j$(nproc) \
+          ARCH=arm64 \
+          SUBARCH=arm64 \
+          CC=clang \
+          CLANG_TRIPLE=aarch64-linux-gnu- \
+          CROSS_COMPILE=aarch64-linux-gnu- \
+          CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
+          O=out \
+          vendor/kona-perf_defconfig    
+
+    - name: Package with AnyKernel3
+      run: |
+        git clone --depth=1 \
+          https://github.com/osm0sis/AnyKernel3 \
+          $GITHUB_WORKSPACE/AnyKernel3
+        cp $GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/Image \
+          $GITHUB_WORKSPACE/AnyKernel3/
+        cd $GITHUB_WORKSPACE/AnyKernel3
+        zip -r9 ../kernel-ksu.zip * \
+          -x .git README.md *placeholder
+
+    - name: Upload kernel image
+      uses: actions/upload-artifact@v4
+      with:
+        name: kernel-Image
+        path: kernel/out/arch/arm64/boot/Image
+
+    - name: Upload AnyKernel3 zip
+      uses: actions/upload-artifact@v4
+      with:
+        name: kernel-ksu-zip
+        path: kernel-ksu.zip
