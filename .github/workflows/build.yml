@@ -40,6 +40,12 @@ jobs:
           "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" \
           | bash -
 
+    - name: Patch missing Kconfig
+      run: |
+        cd $GITHUB_WORKSPACE/kernel
+        mkdir -p kernel/sched_assist
+        touch kernel/sched_assist/Kconfig
+
     - name: Build kernel
       run: |
         cd $GITHUB_WORKSPACE/kernel
