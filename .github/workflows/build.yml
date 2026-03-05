@@ -194,7 +194,7 @@ jobs:
         cd $GITHUB_WORKSPACE/kernel
         curl -LSs \
           "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" \
-          | bash -
+          | bash -s v0.9.5
 
     - name: Build kernel
       run: |
