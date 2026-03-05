@@ -168,8 +168,8 @@ jobs:
         ln -sf $K/arch/arm64/boot/dts/vendor/bindings $K/Documentation/devicetree/bindings
 
         # Fix: link 20828/camera to qcom/camera/ for kona.dtsi include
-        DT_QCOM=$GITHUB_WORKSPACE/kernel_modules/vendor/qcom/proprietary/devicetree-4.19/qcom
-        ln -sf $DT_QCOM/20828/camera $DT_QCOM/camera
+        DT=$GITHUB_WORKSPACE/kernel_modules/vendor/qcom/proprietary/devicetree-4.19
+        ln -sf $DT/20828/camera $DT/qcom/camera
 
         echo "=== 验证关键链接 ==="
         ls $K/kernel/sched_assist/Kconfig && echo "sched_assist OK"
