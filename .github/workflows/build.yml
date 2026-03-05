@@ -180,6 +180,10 @@ jobs:
         ln -sf $GITHUB_WORKSPACE/kernel_modules/kernel/msm-4.19/techpack \
           $GITHUB_WORKSPACE/kernel/techpack
 
+        # fsa4480 needs dsi/ relative to drivers/soc/qcom/
+        ln -sf $GITHUB_WORKSPACE/kernel_modules/kernel/msm-4.19/techpack/display/msm/dsi \
+          $GITHUB_WORKSPACE/kernel/drivers/soc/qcom/dsi
+
         echo "=== 验证关键链接 ==="
         ls $K/kernel/sched_assist/Kconfig && echo "sched_assist OK"
         ls $K/drivers/input/touchscreen/oplus_touchscreen && echo "touchscreen OK"
@@ -227,7 +231,7 @@ jobs:
           CROSS_COMPILE=aarch64-linux-gnu- \
           CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
           O=out \
-          KCFLAGS="-w -I$GITHUB_WORKSPACE/kernel/techpack/display/msm" \
+          KCFLAGS="-w -I$GITHUB_WORKSPACE/kernel_modules/kernel/msm-4.19/techpack/display/msm" \
           BRAND_SHOW_FLAG=oneplus \
           CONFIG_BUILD_ARM64_DT_OVERLAY=y \
           DTC_FLAGS="-f"
