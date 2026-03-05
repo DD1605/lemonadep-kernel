@@ -175,10 +175,6 @@ jobs:
         ls $K/kernel/sched_assist/Kconfig && echo "sched_assist OK"
         ls $K/drivers/input/touchscreen/oplus_touchscreen && echo "touchscreen OK"
         ls $K/drivers/power/oplus && echo "charger OK"
-        echo "=== camera symlink ==="
-        ls -la $DT_QCOM/camera
-        ls $DT_QCOM/camera/kona-camera.dtsi
-
 
     - name: Integrate KernelSU
       run: |
