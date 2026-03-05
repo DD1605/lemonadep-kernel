@@ -175,6 +175,9 @@ jobs:
         mkdir -p $GITHUB_WORKSPACE/kernel_modules/vendor/kernel
         ln -sf $GITHUB_WORKSPACE/kernel \
           $GITHUB_WORKSPACE/kernel_modules/vendor/kernel/msm-4.19
+        
+        ln -sf $GITHUB_WORKSPACE/kernel_modules/kernel/msm-4.19/techpack/display/msm/dsi \
+          $GITHUB_WORKSPACE/kernel/drivers/soc/qcom/dsi
 
         echo "=== 验证关键链接 ==="
         ls $K/kernel/sched_assist/Kconfig && echo "sched_assist OK"
