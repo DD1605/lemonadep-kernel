@@ -176,6 +176,19 @@ jobs:
         ls $K/drivers/input/touchscreen/oplus_touchscreen && echo "touchscreen OK"
         ls $K/drivers/power/oplus && echo "charger OK"
 
+    - name: Patch devicetree Makefile
+      run: |
+        # subdir-y += qcom is unconditional and pulls in QCOM reference designs
+        # (arglass/xr/xrfusion etc) whose camera dtsi are not present in 20828.
+        # Only 20828/ needs to be built for op9r.
+        sed -i 's/^subdir-y += qcom$//' \
+          $GITHUB_WORKSPACE/kernel_modules/vendor/qcom/proprietary/devicetree-4.19/Makefile
+        echo "=== 验证 ==="
+        grep 'subdir-y += qcom' \
+          $GITHUB_WORKSPACE/kernel_modules/vendor/qcom/proprietary/devicetree-4.19/Makefile \
+          && echo "WARNING: 还有残留" || echo "OK: qcom subdir 已移除"
+
+
     - name: Integrate KernelSU
       run: |
         cd $GITHUB_WORKSPACE/kernel
@@ -206,6 +219,7 @@ jobs:
           CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
           O=out \
           KCFLAGS="-Wno-strict-prototypes" \
+          BRAND_SHOW_FLAG=oneplus \
           CONFIG_BUILD_ARM64_DT_OVERLAY=y \
           DTC_FLAGS="-f"
 
