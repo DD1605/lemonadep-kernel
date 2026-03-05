@@ -208,7 +208,6 @@ jobs:
           CROSS_COMPILE=aarch64-linux-gnu- \
           CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
           O=out \
-          W=0 \
           vendor/kona-perf_defconfig
 
         make -j$(nproc) \
@@ -219,8 +218,7 @@ jobs:
           CROSS_COMPILE=aarch64-linux-gnu- \
           CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
           O=out \
-          W=0 \
-          KCFLAGS="-Wno-strict-prototypes" \
+          KCFLAGS="-w" \
           BRAND_SHOW_FLAG=oneplus \
           CONFIG_BUILD_ARM64_DT_OVERLAY=y \
           DTC_FLAGS="-f"
